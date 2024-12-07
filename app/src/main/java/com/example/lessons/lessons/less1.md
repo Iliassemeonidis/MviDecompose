@@ -286,3 +286,11 @@ public static final void testCrossInline() {
     regularFun(func$iv);
 }
 ```
+слайд 33
+```java
+public static final void testCrossInline() {
+      int $i$f$crossInlineFun = false;
+      Function0 func$iv = (Function0)(new ExampleKt$testCrossInline$$inlined$crossInlineFun$1());
+      regularFun(func$iv);
+   }
+```
