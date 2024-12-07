@@ -317,3 +317,9 @@ inline fun f(crossinline body: () -> Unit) {
 fun <T> isA(value : Any) = value is T
 //Error: Cannot check for instance of erased type: T
 ```
+
+```kotlin
+inline fun <reified T> isA(value: Any) = value is T
+println(isA<String>("abc")) // Выведет: true
+println(isA<String>(123))   // Выведет: false
+```
