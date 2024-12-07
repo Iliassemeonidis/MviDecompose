@@ -256,3 +256,14 @@ public static final void factoryCycle(@NotNull String company, boolean isImport)
 inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) {
 }
 ```
+
+```kotlin
+inline fun inlineFun(body: () -> Unit) {
+    body.invoke()
+}
+fun foo() {
+    inlineFun {
+        return // происходит завершение функции вызова! УРА!!!!
+    }
+}
+```
