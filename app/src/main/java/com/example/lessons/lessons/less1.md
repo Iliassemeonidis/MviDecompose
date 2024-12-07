@@ -2,7 +2,7 @@
  button.setOnClickListener(new OnClickListener() {
     @Override
     public void onClick (View view){
-//Обработка действия по нажатию
+      //Обработка действия по нажатию
     }
 }
 ```
