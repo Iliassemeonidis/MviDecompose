@@ -267,3 +267,22 @@ fun foo() {
     }
 }
 ```
+
+```java
+public static final void testCrossInline() {
+    final Function0 body$iv = (Function0) null.INSTANCE;
+    int $i$f$crossInlineFun = false;
+    Function0 func$iv = (Function0) (new Function0() {
+        public final String invoke() {
+            return "crossInline func code, " + (String) body$iv.invoke();
+        }
+
+        // $FF: synthetic method
+        // $FF: bridge method
+        public Object invoke() {
+            return this.invoke();
+        }
+    });
+    regularFun(func$iv);
+}
+```
