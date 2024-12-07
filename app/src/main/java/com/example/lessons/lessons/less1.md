@@ -2,7 +2,7 @@
  button.setOnClickListener(new OnClickListener() {
     @Override
     public void onClick (View view){
-      //Обработка действия по нажатию
+        //Обработка действия по нажатию
     }
 }
 ```
@@ -231,5 +231,22 @@ private final void crossInlineFun(final Function0 body) {
         }
     });
     this.regularFun(func);
+}
+```
+
+слайд 10
+
+```java
+@NotNull
+public static final Device createDevice(@NotNull Company company, @NotNull Factory factory, @NotNull Function2 assemble) {
+    Intrinsics.checkNotNullParameter(company, "company");
+    Intrinsics.checkNotNullParameter(factory, "factory");
+    Intrinsics.checkNotNullParameter(assemble, "assemble");
+    return (Device) assemble.invoke(company, factory);
+}
+
+public static final void factoryCycle(@NotNull String company, boolean isImport) {
+    Intrinsics.checkNotNullParameter(company, "company");
+    createDevice(new Company(company), new Factory(isImport), (Function2) null.INSTANCE);
 }
 ```
