@@ -237,6 +237,7 @@ private final void crossInlineFun(final Function0 body) {
 слайд 10
 
 ```java
+
 @NotNull
 public static final Device createDevice(@NotNull Company company, @NotNull Factory factory, @NotNull Function2 assemble) {
     Intrinsics.checkNotNullParameter(company, "company");
@@ -248,5 +249,10 @@ public static final Device createDevice(@NotNull Company company, @NotNull Facto
 public static final void factoryCycle(@NotNull String company, boolean isImport) {
     Intrinsics.checkNotNullParameter(company, "company");
     createDevice(new Company(company), new Factory(isImport), (Function2) null.INSTANCE);
+}
+```
+
+```kotlin
+inline fun foo(inlined: () -> Unit, noinline notInlined: () -> Unit) {
 }
 ```
