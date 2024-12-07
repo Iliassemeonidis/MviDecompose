@@ -286,11 +286,30 @@ public static final void testCrossInline() {
     regularFun(func$iv);
 }
 ```
+
 слайд 33
+
 ```java
 public static final void testCrossInline() {
-      int $i$f$crossInlineFun = false;
-      Function0 func$iv = (Function0)(new ExampleKt$testCrossInline$$inlined$crossInlineFun$1());
-      regularFun(func$iv);
-   }
+    int $i$f$crossInlineFun = false;
+    Function0 func$iv = (Function0) (new ExampleKt$testCrossInline$$inlined$crossInlineFun$1());
+    regularFun(func$iv);
+}
+```
+
+Слайд 36
+```kotlin
+inline fun f(body: () -> Unit) {
+    val f = object : Runnable {
+        override fun run() = body()
+    }
+}
+```
+
+```kotlin
+inline fun f(crossinline body: () -> Unit) {
+    val f = object : Runnable {
+        override fun run() = body()
+    }
+}
 ```
