@@ -372,3 +372,11 @@ fun CounterExample() {
     }
 }
 ```
+
+```kotlin
+@Preview(showBackground = true)
+@Composable
+internal fun SearchBarPreview() {
+    SearchBar()
+}
+```
