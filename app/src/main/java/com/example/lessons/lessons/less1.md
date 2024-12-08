@@ -323,3 +323,14 @@ inline fun <reified T> isA(value: Any) = value is T
 println(isA<String>("abc")) // Выведет: true
 println(isA<String>(123))   // Выведет: false
 ```
+Урок по компоуз 
+
+```kotlin
+@Composable
+fun User($composer: Composer) {
+$composer.startRestartGroup() // Начало группы
+    // Тело функции
+    $composer.endRestartGroup() // Конец группы
+
+}
+```
