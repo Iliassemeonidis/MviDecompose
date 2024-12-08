@@ -361,3 +361,14 @@ fun ArtistAvatar(artist: Artist) {
     }
 }
 ```
+
+```kotlin
+@Composable
+fun CounterExample() {
+    var count by remember { mutableStateOf(0) } // Начальное значение 0
+
+    Button(onClick = { count++ }) { // При нажатии увеличиваем count на 1
+        Text("Кликов: $count")
+    }
+}
+```
