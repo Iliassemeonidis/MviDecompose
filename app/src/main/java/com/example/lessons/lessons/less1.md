@@ -298,6 +298,7 @@ public static final void testCrossInline() {
 ```
 
 Слайд 36
+
 ```kotlin
 inline fun f(body: () -> Unit) {
     val f = object : Runnable {
@@ -313,8 +314,9 @@ inline fun f(crossinline body: () -> Unit) {
     }
 }
 ```
+
 ```kotlin
-fun <T> isA(value : Any) = value is T
+fun <T> isA(value: Any) = value is T
 //Error: Cannot check for instance of erased type: T
 ```
 
@@ -323,14 +325,39 @@ inline fun <reified T> isA(value: Any) = value is T
 println(isA<String>("abc")) // Выведет: true
 println(isA<String>(123))   // Выведет: false
 ```
-Урок по компоуз 
+
+Урок по компоуз
 
 ```kotlin
 @Composable
 fun User($composer: Composer) {
-$composer.startRestartGroup() // Начало группы
+    $composer.startRestartGroup() // Начало группы
     // Тело функции
     $composer.endRestartGroup() // Конец группы
 
+}
+```
+
+```kotlin
+Row(
+    modifier = Modifier.padding(all = 8.dp),
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    Button(onClick = { /* обработчик нажатия */ }) {
+        Text("Кнопка 1")
+    }
+    Button(onClick = { /* обработчик нажатия */ }) {
+        Text("Кнопка 2")
+    }
+}
+```
+
+```kotlin
+@Composable
+fun ArtistAvatar(artist: Artist) {
+    Box {
+        Image(bitmap = artist.image, contentDescription = "Artist image")
+        Icon(Icons.Filled.Check, contentDescription = "Check mark")
+    }
 }
 ```
