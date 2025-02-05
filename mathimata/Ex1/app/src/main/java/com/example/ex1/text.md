@@ -39,16 +39,14 @@ fun Example3() {
 ```
 
 ```kotlin
-@Preview(showBackground = true)
 @Composable
-fun Example4() {
-    Text(
-        "Hello",
-        modifier = Modifier
-            .padding(10.dp)
-            .background(Color.Gray)
-            .size(100.dp)
-    )
+fun LoadDataExample(viewModel: MyViewModel) {
+    val data = viewModel.data.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.loadData()
+    }
+
+    Text(text = data.value)
 }
 ```
