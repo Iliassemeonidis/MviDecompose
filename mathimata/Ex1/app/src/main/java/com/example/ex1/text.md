@@ -40,21 +40,21 @@ fun Example3() {
 
 ```kotlin
 @Composable
-fun LoadDataButton() {
-    val scope = rememberCoroutineScope()  // Получаем CoroutineScope, //связанный с этим Composable
+fun FlowCollectorExample(viewModel: MyViewModel = viewModel()) {
+    val flowData: Flow<MyData> = viewModel.dataFlow
+    val data: State<MyData> = flowData.collectAsState(initial = MyData())
 
-    Button(onClick = {
-        scope.launch {
-            val data = fetchDataFromNetwork()  // Асинхронно загружаем данные
-// Обработка загруженных данных
+    DisposableEffect(Unit) {
+        val job = flowData.collect { newData ->
+// Обработка данных
         }
-    }) {
-        Text("Загрузить данные")
-    }
-}
 
-suspend fun fetchDataFromNetwork(): String {
-// Реализация загрузки данных из сети
-    return "Некоторые данные"
+        onDispose {
+            job.cancel()
+        }
+    }
+
+// Отображение данных...
+    Text("Data: ${data.value}")
 }
 ```
