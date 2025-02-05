@@ -64,7 +64,7 @@ fun AutoFocusTextField() {
 @Composable
 fun UpdateExternalState(someState: MutableState<Int>) {
     SideEffect {
-// Предположим, что externalDataStorage - это внешний хранилище данных
+// Предположим, что externalDataStorage - это внешнее хранилище данных
         externalDataStorage.updateData("count", someState.value)
     }
 }
