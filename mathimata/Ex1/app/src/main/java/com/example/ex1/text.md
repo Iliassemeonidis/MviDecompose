@@ -1,60 +1,106 @@
 ```kotlin
-@Preview(showBackground = true)
 @Composable
-fun Example1() {
-    Box(
-        modifier = Modifier
-            .padding(10.dp)
-            .size(100.dp)
-    )
-}
-```
-
-```kotlin
-@Preview(showBackground = true)
-@Composable
-fun Example2() {
-
-    Box(
-        modifier = Modifier
-            .size(100.dp)
-            .padding(10.dp)
-    )
-
-}
-```
-
-```kotlin
-@Preview(showBackground = true)
-@Composable
-fun Example3() {
-    Text(
-        "Hello",
-        modifier = Modifier
-            .background(Color.Gray)
-            .padding(10.dp)
-            .size(100.dp)
-    )
-}
-```
-
-```kotlin
-@Composable
-fun FlowCollectorExample(viewModel: MyViewModel = viewModel()) {
-    val flowData: Flow<MyData> = viewModel.dataFlow
-    val data: State<MyData> = flowData.collectAsState(initial = MyData())
-
-    DisposableEffect(Unit) {
-        val job = flowData.collect { newData ->
-// Обработка данных
+fun LocationListener(locationManager: LocationManager, listener: LocationListener) {
+    DisposableEffect(locationManager) {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, 0f, listener)
+        onDispose {
+            locationManager.removeUpdates(listener)
         }
+    }
+}
+```
+
+```kotlin
+@Composable
+fun TimerExample() {
+    DisposableEffect(Unit) {
+        val timer = Timer()
+        timer.schedule(timerTask {
+// Выполнение действия
+        }, 1000L)
 
         onDispose {
-            job.cancel()
+            timer.cancel()
+        }
+    }
+}
+```
+
+```kotlin
+@Composable
+fun AutoFocusTextField() {
+    val focusRequester = remember { FocusRequester() }
+    val isFocused = remember { mutableStateOf(false) }
+
+    Column {
+        TextField(
+            value = "",
+            onValueChange = {},
+            placeholder = { Text("Введите текст") },
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .padding(16.dp)
+        )
+
+        Button(
+            onClick = { isFocused.value = true },
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text("Фокусируй")
         }
     }
 
-// Отображение данных...
-    Text("Data: ${data.value}")
+// Побочный эффект для управления фокусом
+    SideEffect {
+        if (isFocused.value) {
+            focusRequester.requestFocus()
+            isFocused.value = false // Сброс после фокусировки
+        }
+    }
+}
+```
+
+```kotlin
+@Composable
+fun UpdateExternalState(someState: MutableState<Int>) {
+    SideEffect {
+// Предположим, что externalDataStorage - это внешний хранилище данных
+        externalDataStorage.updateData("count", someState.value)
+    }
+}
+```
+
+```kotlin
+@Composable
+fun ActiveTasksList(tasks: List<Task>) {
+    val activeTasks = remember(tasks) {
+        derivedStateOf { tasks.filter { !it.isCompleted } }
+    }
+
+    LazyColumn {
+        items(activeTasks.value) { task ->
+            Text("Задание: ${task.name}")
+        }
+    }
+}
+```
+
+```kotlin
+@Composable
+fun UserProfile(userId: String) {
+    val userData = produceState<Resource<User>>(initialValue = Resource.Loading(), key = userId) {
+        val userResource = try {
+            Resource.Success(loadUserFromNetwork(userId))
+        } catch (e: Exception) {
+            Resource.Error("Не удалось загрузить данные")
+        }
+        value = userResource
+    }
+
+    when (val result = userData.value) {
+        is Resource.Success -> Text("Пользователь: ${result.data.name}")
+        is Resource.Error -> Text("Ошибка: ${result.message}")
+        is Resource.Loading -> CircularProgressIndicator()
+    }
 }
 ```
