@@ -40,16 +40,21 @@ fun Example3() {
 
 ```kotlin
 @Composable
-internal fun ListStationScreen(
-    viewModel: ListStationViewModel = viewModel(factory = ListStationViewModel.Factory),
-) {
-    val state = viewModel.state.collectAsStateWithLifecycle()
-    LaunchedEffect(viewModel) {
-        viewModel.acceptAction(ListStationAction.Start)
+fun LoadDataButton() {
+    val scope = rememberCoroutineScope()  // Получаем CoroutineScope, //связанный с этим Composable
+
+    Button(onClick = {
+        scope.launch {
+            val data = fetchDataFromNetwork()  // Асинхронно загружаем данные
+// Обработка загруженных данных
+        }
+    }) {
+        Text("Загрузить данные")
     }
-    ListStationView(
-        state = state,
-        acceptAction = viewModel::acceptAction,
-    )
+}
+
+suspend fun fetchDataFromNetwork(): String {
+// Реализация загрузки данных из сети
+    return "Некоторые данные"
 }
 ```
