@@ -40,13 +40,16 @@ fun Example3() {
 
 ```kotlin
 @Composable
-fun LoadDataExample(viewModel: MyViewModel) {
-    val data = viewModel.data.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.loadData()
+internal fun ListStationScreen(
+    viewModel: ListStationViewModel = viewModel(factory = ListStationViewModel.Factory),
+) {
+    val state = viewModel.state.collectAsStateWithLifecycle()
+    LaunchedEffect(viewModel) {
+        viewModel.acceptAction(ListStationAction.Start)
     }
-
-    Text(text = data.value)
+    ListStationView(
+        state = state,
+        acceptAction = viewModel::acceptAction,
+    )
 }
 ```
