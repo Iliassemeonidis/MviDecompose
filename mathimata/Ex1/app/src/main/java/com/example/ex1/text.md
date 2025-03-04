@@ -87,20 +87,41 @@ fun ActiveTasksList(tasks: List<Task>) {
 
 ```kotlin
 @Composable
-fun UserProfile(userId: String) {
-    val userData = produceState<Resource<User>>(initialValue = Resource.Loading(), key = userId) {
-        val userResource = try {
-            Resource.Success(loadUserFromNetwork(userId))
-        } catch (e: Exception) {
-            Resource.Error("Не удалось загрузить данные")
-        }
-        value = userResource
-    }
+fun SimpleAnimationExample() {
+    var sizeState by remember { mutableStateOf(300.dp) }
 
-    when (val result = userData.value) {
-        is Resource.Success -> Text("Пользователь: ${result.data.name}")
-        is Resource.Error -> Text("Ошибка: ${result.message}")
-        is Resource.Loading -> CircularProgressIndicator()
+    val size by animateDpAsState(
+        targetValue = sizeState,
+        animationSpec = tween(
+            durationMillis = 200,
+            easing = LinearOutSlowInEasing
+        )
+    )
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier.shadow(
+                elevation = 2.dp,
+                shape = CircleShape
+            )
+                .size(size)
+                .background(Color.Red),
+            contentAlignment = Alignment.Center,
+        ) {
+            Button(onClick = { sizeState += 50.dp }) {
+                Text("Increase Size")
+            }
+        }
     }
+}
+
+@Preview
+@Composable
+fun PreviewSimpleAnimation() {
+    SimpleAnimationExample()
 }
 ```
