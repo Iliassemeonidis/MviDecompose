@@ -87,41 +87,52 @@ fun ActiveTasksList(tasks: List<Task>) {
 
 ```kotlin
 @Composable
-fun SimpleAnimationExample() {
-    var sizeState by remember { mutableStateOf(300.dp) }
+fun FadeSizeAnimationExample() {
+    var isVisible by remember { mutableStateOf(true) }
 
-    val size by animateDpAsState(
-        targetValue = sizeState,
-        animationSpec = tween(
-            durationMillis = 200,
-            easing = LinearOutSlowInEasing
-        )
-    )
+    // Создаём транзицию
+    val transition = updateTransition(targetState = isVisible, label = "FadeSizeAnimation")
+
+    // Анимация прозрачности
+    val alpha by transition.animateFloat(
+        label = "AlphaAnimation"
+    ) { state ->
+        if (state) 1f else 0f
+    }
+
+    // Анимация размера
+    val size by transition.animateDp(
+        label = "SizeAnimation"
+    ) { state ->
+        if (state) 200.dp else 100.dp
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier.shadow(
-                elevation = 2.dp,
-                shape = CircleShape
-            )
-                .size(size)
-                .background(Color.Red),
-            contentAlignment = Alignment.Center,
+        Button(
+            onClick = { isVisible = !isVisible }
         ) {
-            Button(onClick = { sizeState += 50.dp }) {
-                Text("Increase Size")
-            }
+            Text("Показать / Скрыть Блок")
+        }
+
+        Box(
+            modifier = Modifier
+                .size(size)
+                .background(
+                    Color.Blue.copy(alpha = alpha)
+                )
+        ) {
+            Text(
+                "Анимированный блок",
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(start = 15.dp),
+                color = Color.White
+            )
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewSimpleAnimation() {
-    SimpleAnimationExample()
 }
 ```
