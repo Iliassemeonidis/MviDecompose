@@ -86,51 +86,34 @@ fun ActiveTasksList(tasks: List<Task>) {
 ```
 
 ```kotlin
+@SuppressLint("RememberReturnType")
 @Composable
-fun FadeSizeAnimationExample() {
-    var isVisible by remember { mutableStateOf(true) }
+fun AnimatedSizeBox() {
+    val scope = rememberCoroutineScope()
+    var sizeState by remember { mutableStateOf(100.dp) }
+    val animatedSize = remember { Animatable(sizeState.value) }
 
-    // Создаём транзицию
-    val transition = updateTransition(targetState = isVisible, label = "FadeSizeAnimation")
-
-    // Анимация прозрачности
-    val alpha by transition.animateFloat(
-        label = "AlphaAnimation"
-    ) { state ->
-        if (state) 1f else 0f
-    }
-
-    // Анимация размера
-    val size by transition.animateDp(
-        label = "SizeAnimation"
-    ) { state ->
-        if (state) 200.dp else 100.dp
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
     ) {
-        Button(
-            onClick = { isVisible = !isVisible }
-        ) {
-            Text("Показать / Скрыть Блок")
-        }
-
-        Box(
-            modifier = Modifier
-                .size(size)
-                .background(
-                    Color.Blue.copy(alpha = alpha)
-                )
-        ) {
-            Text(
-                "Анимированный блок",
+        Column {
+            Button(onClick = {
+                scope.launch {
+                    animatedSize.animateTo(
+                        targetValue = if (sizeState == 100.dp) 200f else 100f,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                    sizeState = if (sizeState == 100.dp) 200.dp else 100.dp
+                }
+            }) {
+                Text("Toggle Size")
+            }
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(start = 15.dp),
-                color = Color.White
+                    .size(animatedSize.value.dp)
+                    .padding(8.dp)
+                    .background(Color.Blue)
             )
         }
     }
