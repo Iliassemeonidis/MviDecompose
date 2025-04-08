@@ -119,3 +119,27 @@ fun AnimatedSizeBox() {
     }
 }
 ```
+
+```kotlin
+fun main() = runBlocking {
+// Запуск двух параллельных вычислений
+    val deferred1: Deferred<Int> = async {
+        delay(1000L) // Имитация долгого вычисления
+        println("First calculation complete")
+        21
+    }
+
+    val deferred2: Deferred<Int> = async {
+        delay(1000L) // Имитация другого долгого вычисления
+        println("Second calculation complete")
+        21
+    }
+
+    // Ожидание завершения обоих вычислений и получение их результатов
+    val result1 = deferred1.await()
+    val result2 = deferred2.await()
+
+    // Объединение результатов
+    println("Главный вопрос жизни, Вселенной и всего такого ${result1 + result2}")
+}
+```
