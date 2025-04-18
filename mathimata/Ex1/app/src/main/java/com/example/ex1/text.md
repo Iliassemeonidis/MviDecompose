@@ -1,46 +1,48 @@
 ```kotlin
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
+@Composable
+fun MyApplicationTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    // Dynamic color is available on Android 12+
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
 
-val bodyFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Roboto Mono"),
-        fontProvider = provider,
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
     )
-)
-
-val displayFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Roboto Mono"),
-        fontProvider = provider,
-    )
-)
-
-val baseline = Typography()
-val AppTypography = Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
-    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
-)
+}
 ```
 
-```
-Вывод:
-Received: 1
-Caught exception : java.lang.RuntimeException: Error!
+```kotlin
+@Composable
+fun MaterialTheme(
+    colorScheme: ColorScheme = MaterialTheme.colorScheme,
+    shapes: Shapes = MaterialTheme.shapes,
+    typography: Typography = MaterialTheme.typography,
+    content: @Composable () -> Unit
+) {
+    val rippleIndication = androidx.compose.material.ripple.rememberRipple()
+    val selectionColors = rememberTextSelectionColors(colorScheme)
+    CompositionLocalProvider(
+        LocalColorScheme provides colorScheme,
+        LocalIndication provides rippleIndication,
+        androidx.compose.material.ripple.LocalRippleTheme provides MaterialRippleTheme,
+        LocalShapes provides shapes,
+        LocalTextSelectionColors provides selectionColors,
+        LocalTypography provides typography,
+    ) {
+        ProvideTextStyle(value = typography.bodyLarge, content = content)
+    }
+}
 ```
