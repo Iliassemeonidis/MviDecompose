@@ -20,7 +20,6 @@ val displayFontFamily = FontFamily(
 )
 
 val baseline = Typography()
-
 val AppTypography = Typography(
     displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
